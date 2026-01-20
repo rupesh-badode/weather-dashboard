@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'bootstrap-icons/font/bootstrap-icons.css'; // Bootstrap icons
@@ -17,35 +18,37 @@ export default function App() {
   const [favorites, setFavorites] = useState([]);
   const [history, setHistory] = useState([]);
 
-  const fetchWeather = async (searchCity) => {
-    try {
-      const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&units=${unit}&appid=9e42475700786e1fa0cdb019f1cd0891`
-      );
-      setWeather(response.data);
-      setCity(searchCity);
-      setHistory((prev) => [searchCity, ...prev.filter((c) => c !== searchCity)]);
-    } catch (err) {
-      alert("City not found!");
-    }
-  };
+  const fetchWeather = useCallback(async (searchCity) => {
+  try {
+    const response = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&units=${unit}&appid=9e42475700786e1fa0cdb019f1cd0891`
+    );
+    setWeather(response.data);
+    setCity(searchCity);
+    setHistory((prev) => [searchCity, ...prev.filter((c) => c !== searchCity)]);
+  } catch (err) {
+    alert("City not found!");
+  }
+}, [unit]);
 
-  const fetchForecast = async (searchCity) => {
-    try {
-      const res = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${searchCity}&units=${unit}&appid=9e42475700786e1fa0cdb019f1cd0891`
-      );
-      const daily = res.data.list.filter((_, index) => index % 8 === 0);
-      setForecast(daily);
-    } catch (err) {
-      console.error("Error fetching forecast:", err);
-    }
-  };
+const fetchForecast = useCallback(async (searchCity) => {
+  try {
+    const res = await axios.get(
+      `https://api.openweathermap.org/data/2.5/forecast?q=${searchCity}&units=${unit}&appid=9e42475700786e1fa0cdb019f1cd0891`
+    );
+    const daily = res.data.list.filter((_, index) => index % 8 === 0);
+    setForecast(daily);
+  } catch (err) {
+    console.error("Error fetching forecast:", err);
+  }
+}, [unit]);
+
 
   useEffect(() => {
-    fetchWeather(city);
-    fetchForecast(city);
-  }, [unit]);
+  fetchWeather(city);
+  fetchForecast(city);
+}, [city, unit, fetchWeather, fetchForecast]);
+
 
   const toggleUnit = () => {
     setUnit((prev) => (prev === "metric" ? "imperial" : "metric"));
