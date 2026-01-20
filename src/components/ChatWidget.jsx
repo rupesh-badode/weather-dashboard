@@ -14,7 +14,7 @@ const ChatWidget = () => {
   const messagesEndRef = useRef(null);
 
   // API Key (Apni Key yahan dalein)
-  const API_KEY = "9e42475700786e1fa0cdb019f1cd0891";
+  const API_KEY = "ceabec824dd2e0f8fd0d342caec18d6b";
 
   // Auto-scroll logic
   const scrollToBottom = () => {
