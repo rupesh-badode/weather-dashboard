@@ -7,6 +7,7 @@ import WeatherInfo from './components/WeatherInfo';
 import Forecast from './components/Forecast';
 import Favorites from './components/Favorites';
 import SearchHistory from './components/SearchHistory';
+import ChatWidget from './components/ChatWidget';
 
 export default function App() {
   const [city, setCity] = useState("Mumbai");
@@ -80,6 +81,7 @@ export default function App() {
           <SearchHistory history={history} onSelect={fetchWeather} />
         </div>
       </div>
+      <ChatWidget weather={weather} city={city} />
     </div>
   );
 }
